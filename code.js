@@ -22,6 +22,10 @@ async function getWeatherData(input) {
         const region = weatherData.location.region;
         const temp_f = weatherData.current.temp_f;
         const condition = weatherData.current.condition.text;
+        // get the condition image
+        const conditionImage = weatherData.current.condition.icon;
+        // the path to the condition image starts at index 21
+        const conditionImagePath = conditionImage.slice(21);
 
         // max and min from forecast data
         const max_temp_f = forecastData.forecast.forecastday[0].day.maxtemp_f;
@@ -31,15 +35,9 @@ async function getWeatherData(input) {
         const wind = weatherData.current.wind_mph;
         const humidity = weatherData.current.humidity;
 
-        const weatherInfo = new weatherCard(city, region, temp_f, condition, max_temp_f, min_temp_f, feelsLike_f, wind, humidity);
-        // testWeather.removeCard();
+        const weatherInfo = new weatherCard(city, region, temp_f, condition, conditionImagePath, max_temp_f, min_temp_f, feelsLike_f, wind, humidity);
         weatherInfo.testPrint();
         weatherInfo.createCard();
-
-        // const button = document.getElementById("remove");
-        // button.addEventListener("click", () => {
-        //     testWeather.removeCard();
-        // })
 
     } catch (error) {
         alert("Could not get weather data for this location. Please enter a valid city or zip code.");
@@ -66,47 +64,13 @@ searchBar.addEventListener("keydown", event => {
     }
 });
 
-// async function getWeatherForecastData(input) {
-//     try {
-//         const response = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
-//         const weatherForecastData = await response.json();
-//         console.log(weatherForecastData);
-//         const max_temp_f = weatherForecastData.forecast.forecastday[0].day.maxtemp_f;
-//         const min_temp_f = weatherForecastData.forecast.forecastday[0].day.mintemp_f;
-//         console.log(max_temp_f);
-//         console.log(min_temp_f);
-//         // const city = weatherData.location.name;
-//         // const region = weatherData.location.region;
-//         // const temp_f = weatherData.current.temp_f;
-//         // const condition = weatherData.current.condition.text;
-//         // const feelsLike_f = weatherData.current.feelslike_f;
-//         // const wind = weatherData.current.wind_mph;
-//         // const humidity = weatherData.current.humidity;
-//         //
-//         // const testWeather = new weatherCard(city, region, temp_f, condition, feelsLike_f, wind, humidity);
-//         // // testWeather.removeCard();
-//         // testWeather.testPrint();
-//         // testWeather.createCard();
-//         //
-//         // const button = document.getElementById("remove");
-//         // button.addEventListener("click", () => {
-//         //     testWeather.removeCard();
-//         // })
-//
-//     } catch (error) {
-//         alert("Could not get weather data for this location. Please enter a valid city or zip code.");
-//         console.log("Could not get weather data for this location: " + error);
-//         getWeatherData("Philadelphia");
-//     }
-//
-// }
-
 class weatherCard {
-    constructor(city, region, temp_f, condition, maxtemp_f, mintemp_f, feelsLike_f, wind, humidity) {
+    constructor(city, region, temp_f, condition, conditionImage, maxtemp_f, mintemp_f, feelsLike_f, wind, humidity) {
         this.city = city;
         this.region = region;
         this.temp_f = temp_f;
         this.condition = condition;
+        this.conditionImage = conditionImage;
         this.maxtemp_f = maxtemp_f;
         this.mintemp_f = mintemp_f;
         this.feelsLike_f = feelsLike_f;
@@ -124,6 +88,9 @@ class weatherCard {
         this.weatherCondition = document.createElement('h2');
         this.weatherCondition.classList.add("weather-items");
         this.weatherCondition.id = "weather-condition";
+        // condition image
+        this.weatherConditionImage = document.createElement('img');
+        this.weatherConditionImage.id = "weather-condition-image";
         // max temp in fahrenheit
         this.weatherMaxTempF = document.createElement('h3');
         this.weatherMaxTempF.classList.add("weather-items");
@@ -146,8 +113,6 @@ class weatherCard {
         this.weatherHumidity.id = "weather-humidity";
     }
 
-
-
     testPrint() {
         console.log("City: " + this.city);
         console.log("Region: " + this.region);
@@ -161,16 +126,28 @@ class weatherCard {
     }
 
     createCard() {
-        // const weatherInfo = document.getElementById("weather-info");
-        // const weatherLocation = document.createElement('h1');
         this.weatherLocation.textContent = this.city + ", " + this.region;
         this.weatherInfo.appendChild(this.weatherLocation);
-        // const weatherTempF = document.createElement('h1');
+
+        // temp, condition, and image div
+        const mainInfo = document.createElement('div');
+        mainInfo.id = "main-weather-info";
+        this.weatherInfo.appendChild(mainInfo);
+
+        const mainInfoLeft = document.createElement('div');
+        mainInfoLeft.id = "main-info-left";
+        mainInfo.appendChild(mainInfoLeft);
+
+        const mainInfoRight = document.createElement('div');
+        mainInfoRight.id = "main-info-right";
+        mainInfo.appendChild(mainInfoRight);
+
         this.weatherTempF.textContent = this.temp_f + "\u00B0F";
-        this.weatherInfo.appendChild(this.weatherTempF);
-        // const weatherCondition = document.createElement('h1');
+        mainInfoLeft.appendChild(this.weatherTempF);
         this.weatherCondition.textContent = this.condition;
-        this.weatherInfo.appendChild(this.weatherCondition);
+        mainInfoLeft.appendChild(this.weatherCondition);
+        this.weatherConditionImage.src = this.conditionImage;
+        mainInfoRight.appendChild(this.weatherConditionImage);
 
         this.weatherMaxTempF.textContent = "High: " + this.maxtemp_f + "\u00B0F";
         this.weatherInfo.appendChild(this.weatherMaxTempF);
@@ -187,34 +164,19 @@ class weatherCard {
         this.weatherHumidity.textContent = "Humidity: " + this.humidity + "%";
         this.weatherInfo.appendChild(this.weatherHumidity);
     }
-
-    // removeCard() {
-    //     this.weatherLocation.remove()
-    //     this.weatherTempF.remove();
-    //     this.weatherCondition.remove();
-    //     this.weatherFeelsLikeF.remove();
-    //     this.weatherWind.remove();
-    //     this.weatherHumidity.remove();
-    // }
 }
 
 function removeElements() {
-    // this.weatherLocation = document.createElement('h1');
-    // this.weatherLocation.id = "weather-location";
-    // this.weatherTempF = document.createElement('h1');
-    // this.weatherTempF.id = "weather-temp-f";
-    // this.weatherCondition = document.createElement('h1');
-    // this.weatherCondition.id = "weather-condition";
-    // this.weatherFeelsLikeF = document.createElement('h1');
-    // this.weatherFeelsLikeF.id = "weather-feels-like-f";
-    // this.weatherWind = document.createElement('h1');
-    // this.weatherWind.id = "weather-wind";
-    // this.weatherHumidity = document.createElement('h1');
-    // this.weatherHumidity.id = "weather-humidity";
-
     document.getElementById("weather-location").remove();
-    document.getElementById("weather-temp-f").remove();
-    document.getElementById("weather-condition").remove();
+
+    document.getElementById("main-weather-info").remove();
+
+    // document.getElementById("weather-temp-f").remove();
+    // document.getElementById("weather-condition").remove();
+    // document.getElementById("weather-condition-image").remove();
+
+    document.getElementById("weather-max-temp-f").remove();
+    document.getElementById("weather-min-temp-f").remove();
     document.getElementById("weather-feels-like-f").remove();
     document.getElementById("weather-wind").remove();
     document.getElementById("weather-humidity").remove();
