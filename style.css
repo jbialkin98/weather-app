@@ -1,12 +1,46 @@
 body {
     background-image: url("images/clouds-49520.jpg");
     background-position: center;
+
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#weather-search {
+    width: 200px;
+    height: 25px;
+    border: solid black;
+    border-radius: 20px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+::placeholder {
+    text-align: center;
+}
+
+#search-submit {
+    border: solid black;
+    border-radius: 10px;
+    background-color: white;
 }
 
 #weather-info {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0;
+}
+
+#main-weather-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 #weather-temp-f {
@@ -17,6 +51,11 @@ body {
 
 #weather-condition {
     margin-bottom: 30px;
+}
+
+#weather-condition-image {
+    height: 100px;
+    width: 100px;
 }
 
 .weather-items {
