@@ -6,6 +6,7 @@ getWeatherData("Philadelphia");
 
 const searchBar = document.getElementById("weather-search");
 const searchButton = document.getElementById("search-submit");
+const body = document.getElementById("body");
 
 async function getWeatherData(input) {
     try {
@@ -163,6 +164,19 @@ class weatherCard {
         // const weatherHumidity = document.createElement('h1');
         this.weatherHumidity.textContent = "Humidity: " + this.humidity + "%";
         this.weatherInfo.appendChild(this.weatherHumidity);
+
+        console.log(this.conditionImage);
+
+        // TODO: FIX BUG WHEN SEARCHING FOR NIGHT TWICE IN A ROW
+        if (this.conditionImage.charAt(14) === "n" && !body.classList.contains("night")) {
+            body.classList.add("night");
+            searchBar.classList.add("night");
+            searchButton.classList.add("night");
+        } else if (body.classList.contains("night")) {
+            body.classList.remove("night");
+            searchBar.classList.remove("night");
+            searchButton.classList.remove("night");
+        }
     }
 }
 

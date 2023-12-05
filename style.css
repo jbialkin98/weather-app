@@ -1,7 +1,13 @@
 body {
-    background-image: url("images/clouds-49520.jpg");
+    background-image: url("images/day.jpg");
     background-position: center;
+    color: black;
+}
 
+.night {
+    background-image: url("images/night.jpg");
+    background-position: center;
+    color: white;
 }
 
 nav {
@@ -18,6 +24,17 @@ nav {
     background-color: white;
     padding-left: 20px;
     padding-right: 20px;
+}
+
+#weather-search.night {
+    border: solid white;
+    background-color: black;
+}
+
+#search-submit.night {
+    border: solid white;
+    border-radius: 10px;
+    background-color: black;
 }
 
 ::placeholder {
