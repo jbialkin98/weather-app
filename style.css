@@ -11,6 +11,7 @@ body {
 }
 
 nav {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -58,6 +59,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 30px;
 }
 
 #weather-temp-f {
@@ -67,12 +69,17 @@ nav {
 }
 
 #weather-condition {
-    margin-bottom: 30px;
 }
 
 #weather-condition-image {
     height: 100px;
     width: 100px;
+}
+
+#high-and-low {
+    margin-top: 0;
+    display: flex;
+    gap: 20px;
 }
 
 .weather-items {

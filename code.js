@@ -150,10 +150,14 @@ class weatherCard {
         this.weatherConditionImage.src = this.conditionImage;
         mainInfoRight.appendChild(this.weatherConditionImage);
 
-        this.weatherMaxTempF.textContent = "High: " + this.maxtemp_f + "\u00B0F";
-        this.weatherInfo.appendChild(this.weatherMaxTempF);
-        this.weatherMinTempF.textContent = "Low: " + this.mintemp_f + "\u00B0F";
-        this.weatherInfo.appendChild(this.weatherMinTempF);
+        const highAndLow = document.createElement('div');
+        highAndLow.id = "high-and-low";
+        mainInfoLeft.appendChild(highAndLow);
+
+        this.weatherMaxTempF.textContent = "H: " + this.maxtemp_f + "\u00B0F";
+        highAndLow.appendChild(this.weatherMaxTempF);
+        this.weatherMinTempF.textContent = "L: " + this.mintemp_f + "\u00B0F";
+        highAndLow.appendChild(this.weatherMinTempF);
 
         // const weatherFeelsLikeF = document.createElement('h1');
         this.weatherFeelsLikeF.textContent = "Feels like " + this.feelsLike_f + "\u00B0F";
@@ -188,8 +192,8 @@ function removeElements() {
     // document.getElementById("weather-condition").remove();
     // document.getElementById("weather-condition-image").remove();
 
-    document.getElementById("weather-max-temp-f").remove();
-    document.getElementById("weather-min-temp-f").remove();
+    // document.getElementById("weather-max-temp-f").remove();
+    // document.getElementById("weather-min-temp-f").remove();
     document.getElementById("weather-feels-like-f").remove();
     document.getElementById("weather-wind").remove();
     document.getElementById("weather-humidity").remove();
