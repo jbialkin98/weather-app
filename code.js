@@ -3,6 +3,8 @@ getWeatherData("Philadelphia");
 const searchBar = document.getElementById("weather-search");
 const searchButton = document.getElementById("search-submit");
 const body = document.getElementById("body");
+const fahrenheitSelector = document.getElementById("fahrenheit-selector");
+const celsiusSelector = document.getElementById("celsius-selector");
 
 async function getWeatherData(input) {
     try {
@@ -18,7 +20,7 @@ async function getWeatherData(input) {
         const city = weatherData.location.name;
         const region = weatherData.location.region;
         const temp_f = weatherData.current.temp_f;
-        // celcius
+        // celsius
         const temp_c = weatherData.current.temp_c;
         const condition = weatherData.current.condition.text;
         // get the condition image
@@ -35,13 +37,23 @@ async function getWeatherData(input) {
 
 
         const feelsLike_f = weatherData.current.feelslike_f;
+        const feelsLike_c = weatherData.current.feelslike_c;
         const wind = weatherData.current.wind_mph;
         const humidity = weatherData.current.humidity;
 
         const weatherInfo = new weatherCard(city, region, temp_f, temp_c, condition, conditionImagePath,
-            max_temp_f, min_temp_f, max_temp_c, min_temp_c, feelsLike_f, wind, humidity);
+            max_temp_f, min_temp_f, max_temp_c, min_temp_c, feelsLike_f, feelsLike_c, wind, humidity);
         weatherInfo.testPrint();
         weatherInfo.createCard();
+
+        fahrenheitSelector.addEventListener('click', () => {
+            removeElements();
+            getWeatherData(input);
+        });
+        celsiusSelector.addEventListener('click', () => {
+            removeElements();
+            getWeatherData(input);
+        });
 
     } catch (error) {
         alert("Could not get weather data for this location. Please enter a valid city or zip code.");
@@ -69,7 +81,8 @@ searchBar.addEventListener("keydown", event => {
 });
 
 class weatherCard {
-    constructor(city, region, temp_f, temp_c, condition, conditionImage, maxtemp_f, mintemp_f, maxtemp_c, mintemp_c, feelsLike_f, wind, humidity) {
+    constructor(city, region, temp_f, temp_c, condition, conditionImage, maxtemp_f, mintemp_f, maxtemp_c, mintemp_c,
+                feelsLike_f, feelsLike_c, wind, humidity) {
         this.city = city;
         this.region = region;
         this.temp_f = temp_f;
@@ -81,6 +94,7 @@ class weatherCard {
         this.maxtemp_c = maxtemp_c;
         this.mintemp_c = mintemp_c;
         this.feelsLike_f = feelsLike_f;
+        this.feelsLike_c = feelsLike_c;
         this.wind = wind;
         this.humidity = humidity;
 
@@ -89,8 +103,8 @@ class weatherCard {
         this.weatherLocation = document.createElement('h1');
         this.weatherLocation.id = "weather-location";
         // temperature in fahrenheit
-        this.weatherTempF = document.createElement('h1');
-        this.weatherTempF.id = "weather-temp-f";
+        this.weatherTemp = document.createElement('h1');
+        this.weatherTemp.id = "weather-temp-f";
         // weather condition
         this.weatherCondition = document.createElement('h2');
         this.weatherCondition.classList.add("weather-items");
@@ -99,17 +113,17 @@ class weatherCard {
         this.weatherConditionImage = document.createElement('img');
         this.weatherConditionImage.id = "weather-condition-image";
         // max temp in fahrenheit
-        this.weatherMaxTempF = document.createElement('h3');
-        this.weatherMaxTempF.classList.add("weather-items");
-        this.weatherMaxTempF.id = "weather-max-temp-f";
+        this.weatherMaxTemp = document.createElement('h3');
+        this.weatherMaxTemp.classList.add("weather-items");
+        this.weatherMaxTemp.id = "weather-max-temp-f";
         // min temp in fahrenheit
-        this.weatherMinTempF = document.createElement('h3');
-        this.weatherMinTempF.classList.add("weather-items");
-        this.weatherMinTempF.id = "weather-min-temp-f";
+        this.weatherMinTemp = document.createElement('h3');
+        this.weatherMinTemp.classList.add("weather-items");
+        this.weatherMinTemp.id = "weather-min-temp-f";
         // feels like in fahrenheit
-        this.weatherFeelsLikeF = document.createElement('h3');
-        this.weatherFeelsLikeF.classList.add("weather-items");
-        this.weatherFeelsLikeF.id = "weather-feels-like-f";
+        this.weatherFeelsLike = document.createElement('h3');
+        this.weatherFeelsLike.classList.add("weather-items");
+        this.weatherFeelsLike.id = "weather-feels-like";
         // wind speed
         this.weatherWind = document.createElement('h3');
         this.weatherWind.classList.add("weather-items");
@@ -149,8 +163,19 @@ class weatherCard {
         mainInfoRight.id = "main-info-right";
         mainInfo.appendChild(mainInfoRight);
 
-        this.weatherTempF.textContent = this.temp_f + "\u00B0F";
-        mainInfoLeft.appendChild(this.weatherTempF);
+        if (fahrenheitSelector.checked) {
+            this.weatherTemp.textContent = this.temp_f + "\u00B0F";
+            this.weatherMaxTemp.textContent = "H: " + this.maxtemp_f + "\u00B0F";
+            this.weatherMinTemp.textContent = "L: " + this.mintemp_f + "\u00B0F";
+            this.weatherFeelsLike.textContent = "Feels like " + this.feelsLike_f + "\u00B0F";
+        } else {
+            this.weatherTemp.textContent = this.temp_c + "\u00B0C";
+            this.weatherMaxTemp.textContent = "H: " + this.maxtemp_c + "\u00B0C";
+            this.weatherMinTemp.textContent = "L: " + this.mintemp_c + "\u00B0C";
+            this.weatherFeelsLike.textContent = "Feels like " + this.feelsLike_c + "\u00B0C";
+        }
+        mainInfoLeft.appendChild(this.weatherTemp);
+
         this.weatherCondition.textContent = this.condition;
         mainInfoLeft.appendChild(this.weatherCondition);
         this.weatherConditionImage.src = this.conditionImage;
@@ -160,18 +185,12 @@ class weatherCard {
         highAndLow.id = "high-and-low";
         mainInfoLeft.appendChild(highAndLow);
 
-        this.weatherMaxTempF.textContent = "H: " + this.maxtemp_f + "\u00B0F";
-        highAndLow.appendChild(this.weatherMaxTempF);
-        this.weatherMinTempF.textContent = "L: " + this.mintemp_f + "\u00B0F";
-        highAndLow.appendChild(this.weatherMinTempF);
+        highAndLow.appendChild(this.weatherMaxTemp);
+        highAndLow.appendChild(this.weatherMinTemp);
 
-        // const weatherFeelsLikeF = document.createElement('h1');
-        this.weatherFeelsLikeF.textContent = "Feels like " + this.feelsLike_f + "\u00B0F";
-        this.weatherInfo.appendChild(this.weatherFeelsLikeF);
-        // const weatherWind = document.createElement('h1');
+        this.weatherInfo.appendChild(this.weatherFeelsLike);
         this.weatherWind.textContent = "Wind: " + this.wind + " mph";
         this.weatherInfo.appendChild(this.weatherWind);
-        // const weatherHumidity = document.createElement('h1');
         this.weatherHumidity.textContent = "Humidity: " + this.humidity + "%";
         this.weatherInfo.appendChild(this.weatherHumidity);
 
@@ -191,16 +210,8 @@ class weatherCard {
 
 function removeElements() {
     document.getElementById("weather-location").remove();
-
     document.getElementById("main-weather-info").remove();
-
-    // document.getElementById("weather-temp-f").remove();
-    // document.getElementById("weather-condition").remove();
-    // document.getElementById("weather-condition-image").remove();
-
-    // document.getElementById("weather-max-temp-f").remove();
-    // document.getElementById("weather-min-temp-f").remove();
-    document.getElementById("weather-feels-like-f").remove();
+    document.getElementById("weather-feels-like").remove();
     document.getElementById("weather-wind").remove();
     document.getElementById("weather-humidity").remove();
 }
