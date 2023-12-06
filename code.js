@@ -1,7 +1,3 @@
-console.log("hello");
-
-
-
 getWeatherData("Philadelphia");
 
 const searchBar = document.getElementById("weather-search");
@@ -11,17 +7,19 @@ const body = document.getElementById("body");
 async function getWeatherData(input) {
     try {
         // get current weather conditions
-        const currentResponse = await fetch(`http://api.weatherapi.com/v1/current.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
+        const currentResponse = await fetch(`https://api.weatherapi.com/v1/current.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
         const weatherData = await currentResponse.json();
         console.log(weatherData);
         // get forecast conditions
-        const forecastResponse = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
+        const forecastResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
         const forecastData = await forecastResponse.json();
         console.log(forecastData);
 
         const city = weatherData.location.name;
         const region = weatherData.location.region;
         const temp_f = weatherData.current.temp_f;
+        // celcius
+        const temp_c = weatherData.current.temp_c;
         const condition = weatherData.current.condition.text;
         // get the condition image
         const conditionImage = weatherData.current.condition.icon;
@@ -32,11 +30,16 @@ async function getWeatherData(input) {
         const max_temp_f = forecastData.forecast.forecastday[0].day.maxtemp_f;
         const min_temp_f = forecastData.forecast.forecastday[0].day.mintemp_f;
 
+        const max_temp_c = forecastData.forecast.forecastday[0].day.maxtemp_c;
+        const min_temp_c = forecastData.forecast.forecastday[0].day.mintemp_c;
+
+
         const feelsLike_f = weatherData.current.feelslike_f;
         const wind = weatherData.current.wind_mph;
         const humidity = weatherData.current.humidity;
 
-        const weatherInfo = new weatherCard(city, region, temp_f, condition, conditionImagePath, max_temp_f, min_temp_f, feelsLike_f, wind, humidity);
+        const weatherInfo = new weatherCard(city, region, temp_f, temp_c, condition, conditionImagePath,
+            max_temp_f, min_temp_f, max_temp_c, min_temp_c, feelsLike_f, wind, humidity);
         weatherInfo.testPrint();
         weatherInfo.createCard();
 
@@ -66,14 +69,17 @@ searchBar.addEventListener("keydown", event => {
 });
 
 class weatherCard {
-    constructor(city, region, temp_f, condition, conditionImage, maxtemp_f, mintemp_f, feelsLike_f, wind, humidity) {
+    constructor(city, region, temp_f, temp_c, condition, conditionImage, maxtemp_f, mintemp_f, maxtemp_c, mintemp_c, feelsLike_f, wind, humidity) {
         this.city = city;
         this.region = region;
         this.temp_f = temp_f;
+        this.temp_c = temp_c;
         this.condition = condition;
         this.conditionImage = conditionImage;
         this.maxtemp_f = maxtemp_f;
         this.mintemp_f = mintemp_f;
+        this.maxtemp_c = maxtemp_c;
+        this.mintemp_c = mintemp_c;
         this.feelsLike_f = feelsLike_f;
         this.wind = wind;
         this.humidity = humidity;
