@@ -7,11 +7,11 @@ const body = document.getElementById("body");
 async function getWeatherData(input) {
     try {
         // get current weather conditions
-        const currentResponse = await fetch(`https://api.weatherapi.com/v1/current.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
+        const currentResponse = await fetch(`http://api.weatherapi.com/v1/current.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
         const weatherData = await currentResponse.json();
         console.log(weatherData);
         // get forecast conditions
-        const forecastResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
+        const forecastResponse = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=eabd672f7d9f490fbb7234121231511&q=${input}&aqi=no`);
         const forecastData = await forecastResponse.json();
         console.log(forecastData);
 
